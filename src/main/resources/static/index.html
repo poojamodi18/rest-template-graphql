@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <form>
+        <label>token:</label>
+        <input type="text" id="token">
+        <br>
+        <div>
+            <label>Organization:</label>
+            <input type="text" id="org">
+            <br>
+            <textarea id="list" cols="50" rows="15"></textarea>
+        </div>
+    </form>
+<script>
+$(document).ready(function(){
+  $("#token").blur(function(){
+    val = $("#token").val();
+    console.log(val);
+    $.ajax({
+            type: "GET",
+            url: "/user/"+val,
+            success: function(result) {
+                console.log(result);
+                console.log(result.data);
+                var obj = JSON.stringify(result);
+                console.log(obj);
+            }
+        });
+  });
+  $("#org").keyup(function(){
+    $("#list").val('');
+    val = $("#org").val();
+    console.log(val);
+    console.log(val.length);
+    if(val.length>0){
+        $.ajax({
+                async: false,
+                type: "GET",
+                url: "/org1/"+val,
+                contentType: "application/json",
+                dataType: "json",
+                success: function(result) {
+                    if(result === null) {
+                        console.log("empty");
+                    } else {
+                        var obj = JSON.stringify(result.edges);
+                        $.each(JSON.parse(obj), function(key,value) {
+                          console.log(value.node.name+"  login: "+value.node.login);
+                          $("#list").val($("#list").val() +value.node.name+ "\n");
+                        });
+                    }
+                },
+                failure: function(err) {console.log("Error");}
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>
