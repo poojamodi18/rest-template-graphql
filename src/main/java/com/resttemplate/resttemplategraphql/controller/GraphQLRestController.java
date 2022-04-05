@@ -46,7 +46,6 @@ public class GraphQLRestController {
 
         String query = "{\"query\":\"query { viewer{id} }\"}";
         JSONObject body = getBody(query, httpHeaders);
-        //LOG.info(body.getJSONObject("data").toString());
         userToken = token;
         return body.toMap();
     }
@@ -61,7 +60,6 @@ public class GraphQLRestController {
         httpHeaders.add(HTTP_PREFIX, AUTH_PREFIX + userToken);
         String query = "{\"query\":\"query{search(query: \\\"is:public " + name + " in:name type:org\\\" type: USER first: 15) {edges{node{...on Organization{name,login}}}}}\"}";
         JSONObject body = getBody(query, httpHeaders);
-        //LOG.info(body.toString());
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readTree(body.getJSONObject("data").getJSONObject("search").toString());
     }
@@ -75,7 +73,6 @@ public class GraphQLRestController {
         httpHeaders.add(HTTP_PREFIX, AUTH_PREFIX + userToken);
         String query = "{\"query\":\"query{search(query: \\\"is:public " + name + " in:name type:org\\\" type: USER first: 10) {edges{node{...on Organization{name,login}}}}}\"}";
         JSONObject body = getBody(query, httpHeaders);
-        //LOG.info(body.toString());
         return body.getJSONObject("data").getJSONObject("search").toMap();
     }
 
@@ -87,7 +84,6 @@ public class GraphQLRestController {
         httpHeaders.add(HTTP_PREFIX, AUTH_PREFIX + userToken);
         String query = "{\"query\":\"query { organization(login: \\\"" + name + "\\\") { repositories(first: 15) { edges { repository:node { name } } } } }\"}";
         JSONObject body = getBody(query, httpHeaders);
-        //LOG.info(body.toString());
         return body.toMap();
     }
 
@@ -101,7 +97,7 @@ public class GraphQLRestController {
         String query = "{\"query\":\"query{ search( query: \\\"is:public key in:name type:org\\\" type: USER first: 70) {userCount edges{node{...on Organization{name}}}}}\"}";
         JSONObject body = getBody(query, httpHeaders);
 
-        //LOG.info(body.toString());
+        LOG.info(body.toString());
         return "api";
     }
 }
