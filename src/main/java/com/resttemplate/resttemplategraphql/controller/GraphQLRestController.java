@@ -97,7 +97,7 @@ public class GraphQLRestController {
         String query = "{\"query\":\"query{ search( query: \\\"is:public key in:name type:org\\\" type: USER first: 70) {userCount edges{node{...on Organization{name}}}}}\"}";
         JSONObject body = getBody(query, httpHeaders);
 
-        LOG.info(body.toString());
+        LOG.info(String.valueOf(body));
         return "api";
     }
 }
