@@ -15,7 +15,7 @@ import java.util.Map;
 @RestController
 public class GraphQLRestController {
 
-    static final String apiUrl = "https://api.github.com/graphql";
+    static final String API_URL = "https://api.github.com/graphql";
     RestTemplate restTemplate = new RestTemplate();
     String userToken = "";
 
@@ -28,7 +28,7 @@ public class GraphQLRestController {
     }
 
     JSONObject getBody(String query, HttpHeaders httpHeaders) {
-        ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, new HttpEntity<>(query, httpHeaders), String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(API_URL, new HttpEntity<>(query, httpHeaders), String.class);
         JSONObject obj = new JSONObject(response);
         return new JSONObject(obj.getString("body"));
     }
