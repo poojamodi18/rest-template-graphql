@@ -21,6 +21,7 @@ public class GraphQLRestController {
     RestTemplate restTemplate = new RestTemplate();
     String userToken = "";
     static final String AUTH_PREFIX = "Bearer ";
+    static final String HTTP_PREFIX = "Authorization";
     static final Logger LOG = LoggerFactory.getLogger(GraphQLRestController.class);
 
     @GetMapping(value = "/rest-template")
@@ -41,7 +42,7 @@ public class GraphQLRestController {
     public Map<String, Object> userData(@PathVariable String token) {
         HttpHeaders httpHeaders = new HttpHeaders();
         LOG.info(token);
-        httpHeaders.add("Authorization" , AUTH_PREFIX + token);
+        httpHeaders.add(HTTP_PREFIX , AUTH_PREFIX + token);
 
         String query = "{\"query\":\"query { viewer{id} }\"}";
         JSONObject body = getBody(query, httpHeaders);
@@ -57,7 +58,7 @@ public class GraphQLRestController {
         LOG.info(name);
 
         LOG.info(userToken);
-        httpHeaders.add("Authorization", AUTH_PREFIX + userToken);
+        httpHeaders.add(HTTP_PREFIX, AUTH_PREFIX + userToken);
         String query = "{\"query\":\"query{search(query: \\\"is:public " + name + " in:name type:org\\\" type: USER first: 15) {edges{node{...on Organization{name,login}}}}}\"}";
         JSONObject body = getBody(query, httpHeaders);
         LOG.info(body.toString());
@@ -71,7 +72,7 @@ public class GraphQLRestController {
         HttpHeaders httpHeaders = new HttpHeaders();
         LOG.info(name);
         LOG.info(userToken);
-        httpHeaders.add("Authorization", AUTH_PREFIX + userToken);
+        httpHeaders.add(HTTP_PREFIX, AUTH_PREFIX + userToken);
         String query = "{\"query\":\"query{search(query: \\\"is:public " + name + " in:name type:org\\\" type: USER first: 10) {edges{node{...on Organization{name,login}}}}}\"}";
         JSONObject body = getBody(query, httpHeaders);
         LOG.info(body.toString());
@@ -83,7 +84,7 @@ public class GraphQLRestController {
         HttpHeaders httpHeaders = new HttpHeaders();
         LOG.info(name);
         LOG.info(userToken);
-        httpHeaders.add("Authorization", AUTH_PREFIX + userToken);
+        httpHeaders.add(HTTP_PREFIX, AUTH_PREFIX + userToken);
         String query = "{\"query\":\"query { organization(login: \\\"" + name + "\\\") { repositories(first: 15) { edges { repository:node { name } } } } }\"}";
         JSONObject body = getBody(query, httpHeaders);
         LOG.info(body.toString());
@@ -95,7 +96,7 @@ public class GraphQLRestController {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         String toke = "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";
-        httpHeaders.add("Authorization", AUTH_PREFIX + toke);
+        httpHeaders.add(HTTP_PREFIX, AUTH_PREFIX + toke);
 
         String query = "{\"query\":\"query{ search( query: \\\"is:public key in:name type:org\\\" type: USER first: 70) {userCount edges{node{...on Organization{name}}}}}\"}";
         JSONObject body = getBody(query, httpHeaders);
