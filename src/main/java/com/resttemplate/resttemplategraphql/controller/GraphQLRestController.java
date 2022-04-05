@@ -42,7 +42,7 @@ public class GraphQLRestController {
     public Map<String, Object> userData(@PathVariable String token) {
         HttpHeaders httpHeaders = new HttpHeaders();
         LOG.info(token);
-        httpHeaders.add(HTTP_PREFIX , AUTH_PREFIX + token);
+        httpHeaders.add(HTTP_PREFIX, AUTH_PREFIX + token);
 
         String query = "{\"query\":\"query { viewer{id} }\"}";
         JSONObject body = getBody(query, httpHeaders);
@@ -97,7 +97,9 @@ public class GraphQLRestController {
         String query = "{\"query\":\"query{ search( query: \\\"is:public key in:name type:org\\\" type: USER first: 70) {userCount edges{node{...on Organization{name}}}}}\"}";
         JSONObject body = getBody(query, httpHeaders);
 
-        LOG.info(String.valueOf(body));
+        if (body != null) {
+            LOG.info(String.valueOf(body));
+        }
         return "api";
     }
 }
