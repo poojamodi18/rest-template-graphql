@@ -22,16 +22,15 @@ public class GraphQLRestController {
     @GetMapping(value = "/rest-template")
     public String restHome() {
         String url = "http://localhost:8080/";
-        RestTemplate restTemplate = new RestTemplate();
-        String result = restTemplate.getForObject(url, String.class);
-        return result;
+        RestTemplate template = new RestTemplate();
+        return template.getForObject(url, String.class);
+
     }
 
     JSONObject getBody(String query, HttpHeaders httpHeaders) {
         ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, new HttpEntity<>(query, httpHeaders), String.class);
         JSONObject obj = new JSONObject(response);
-        JSONObject body = new JSONObject(obj.getString("body"));
-        return body;
+        return new JSONObject(obj.getString("body"));
     }
 
     @GetMapping(value = "/user/{token}")
@@ -81,7 +80,7 @@ public class GraphQLRestController {
         System.out.println(name);
         System.out.println(userToken);
         httpHeaders.add("Authorization", "Bearer " + userToken);
-        String query = "{\"query\":\"query { organization(login: \\\""+name+"\\\") { repositories(first: 15) { edges { repository:node { name } } } } }\"}";
+        String query = "{\"query\":\"query { organization(login: \\\"" + name + "\\\") { repositories(first: 15) { edges { repository:node { name } } } } }\"}";
         JSONObject body = getBody(query, httpHeaders);
         System.out.println(body);
         return body.toMap();
