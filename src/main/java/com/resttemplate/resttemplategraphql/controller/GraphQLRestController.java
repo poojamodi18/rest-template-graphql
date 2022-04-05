@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ public class GraphQLRestController {
     RestTemplate restTemplate = new RestTemplate();
     String userToken = "";
     final String authPrefix = "Bearer ";
+    private final Logger LOG = LoggerFactory.getLogger(GraphQLRestController.class);
 
     @GetMapping(value = "/rest-template")
     public String restHome() {
@@ -37,12 +40,12 @@ public class GraphQLRestController {
     @GetMapping(value = "/user/{token}")
     public Map<String, Object> userData(@PathVariable String token) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        System.out.println(token);
+        LOG.info(token);
         httpHeaders.add("Authorization" ,authPrefix + token);
 
         String query = "{\"query\":\"query { viewer{id} }\"}";
         JSONObject body = getBody(query, httpHeaders);
-        System.out.println(body.getJSONObject("data"));
+        LOG.info(body.getJSONObject("data").toString());
         userToken = token;
         return body.toMap();
     }
@@ -51,13 +54,13 @@ public class GraphQLRestController {
     @GetMapping(value = "/org1/{name}")
     public JsonNode org1Data(@PathVariable String name) throws JsonProcessingException {
         HttpHeaders httpHeaders = new HttpHeaders();
-        System.out.println(name);
+        LOG.info(name);
 
-        System.out.println(userToken);
+        LOG.info(userToken);
         httpHeaders.add("Authorization", authPrefix + userToken);
         String query = "{\"query\":\"query{search(query: \\\"is:public " + name + " in:name type:org\\\" type: USER first: 15) {edges{node{...on Organization{name,login}}}}}\"}";
         JSONObject body = getBody(query, httpHeaders);
-        System.out.println(body);
+        LOG.info(body.toString());
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readTree(body.getJSONObject("data").getJSONObject("search").toString());
     }
@@ -66,24 +69,24 @@ public class GraphQLRestController {
     @GetMapping(value = "/org/{name}")
     public Map<String, Object> orgData(@PathVariable String name) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        System.out.println(name);
-        System.out.println(userToken);
+        LOG.info(name);
+        LOG.info(userToken);
         httpHeaders.add("Authorization", authPrefix + userToken);
         String query = "{\"query\":\"query{search(query: \\\"is:public " + name + " in:name type:org\\\" type: USER first: 10) {edges{node{...on Organization{name,login}}}}}\"}";
         JSONObject body = getBody(query, httpHeaders);
-        System.out.println(body);
+        LOG.info(body.toString());
         return body.getJSONObject("data").getJSONObject("search").toMap();
     }
 
     @GetMapping(value = "/repo/{name}")
     public Map<String, Object> repoData(@PathVariable String name) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        System.out.println(name);
-        System.out.println(userToken);
+        LOG.info(name);
+        LOG.info(userToken);
         httpHeaders.add("Authorization", authPrefix + userToken);
         String query = "{\"query\":\"query { organization(login: \\\"" + name + "\\\") { repositories(first: 15) { edges { repository:node { name } } } } }\"}";
         JSONObject body = getBody(query, httpHeaders);
-        System.out.println(body);
+        LOG.info(body.toString());
         return body.toMap();
     }
 
@@ -97,7 +100,7 @@ public class GraphQLRestController {
         String query = "{\"query\":\"query{ search( query: \\\"is:public key in:name type:org\\\" type: USER first: 70) {userCount edges{node{...on Organization{name}}}}}\"}";
         JSONObject body = getBody(query, httpHeaders);
 
-        System.out.println(body);
+        LOG.info(body.toString());
         return "api";
     }
 }
