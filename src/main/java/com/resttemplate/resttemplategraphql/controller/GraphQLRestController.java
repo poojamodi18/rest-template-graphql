@@ -99,7 +99,6 @@ public class GraphQLRestController {
         JSONObject body = getBody(query, httpHeaders);
 
         if (body != null) {
-            LOG.info(String.valueOf(body));
             LOG.info(Level.INFO.getLocalizedName(),body);
         }
         return "api";
