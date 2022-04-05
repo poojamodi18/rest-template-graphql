@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
+import java.util.logging.Level;
 
 @RestController
 public class GraphQLRestController {
@@ -99,6 +100,7 @@ public class GraphQLRestController {
 
         if (body != null) {
             LOG.info(String.valueOf(body));
+            LOG.info(Level.INFO.getLocalizedName(),body);
         }
         return "api";
     }
